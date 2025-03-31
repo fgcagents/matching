@@ -82,7 +82,7 @@ async function loadData(filename = 'itinerari_LA51_2_0_1_asc_desc.json') {
         elements.loading.classList.add('visible');
         const jsonData = await fetchJSON(filename);
         data = jsonData;
-        GLOBAL_JSON_DATA = jsonData; // Guardar el JSON cargado en la constante global
+        GLOBAL_JSON_DATA = jsonData || []; // Asegurar que GLOBAL_JSON_DATA no sea null o undefined
         elements.resultContainer.style.display = 'none';
         filteredData = [];
         return data;

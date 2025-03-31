@@ -230,12 +230,13 @@
 
     // Inicia la carga de datos al cargar la página y refresca cada 30 segundos
     document.addEventListener("DOMContentLoaded", function(){
-      if (GLOBAL_JSON_DATA) {
+      if (typeof GLOBAL_JSON_DATA !== 'undefined' && GLOBAL_JSON_DATA) {
           itinerarios = GLOBAL_JSON_DATA; // Asignar el JSON global a itinerarios
           console.log('Itinerarios cargados desde GLOBAL_JSON_DATA:', itinerarios);
           processMatching();
       } else {
-          console.warn('GLOBAL_JSON_DATA no está disponible.');
+          console.warn('GLOBAL_JSON_DATA no está disponible. Asegúrate de cargar los datos correctamente.');
+          itinerarios = []; // Asignar un valor vacío para evitar errores
       }
       allResults = [];
       fetchPage(0).then(() => {
