@@ -594,6 +594,15 @@
     });
     
     document.getElementById("matchedCount").textContent = count;
+
+    // Ajustar el zoom para incluir todos los marcadores si hay alguno
+    if (count > 0) {
+        const bounds = markersLayer.getBounds();
+        map.fitBounds(bounds, {
+            padding: [50, 50], // Añade un padding de 50px alrededor de los marcadores
+            maxZoom: 13 // Limita el zoom máximo para no acercarse demasiado
+        });
+    }
   }
 
   async function refresh() {
@@ -705,3 +714,4 @@ function showItinerary(trainName) {
 </div>
 </body>
 </html>
+``` 
