@@ -27,7 +27,7 @@
     .controls {
       background-color: rgba(255, 255, 255, 0.95);
       border-radius: 12px;  /* Reducido de 16px */
-      padding: 15px;        /* Reducido de 24px */
+      padding: 16px;        /* Reducido de 24px */
       margin: 10px;         /* Reducido de 15px */
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       backdrop-filter: blur(10px);
@@ -547,7 +547,6 @@
   function updateMapMarkers() {
     markersLayer.clearLayers();
     let count = 0;
-    let markers = [];  // Array para almacenar todos los marcadores
     
     idToTrainMap.forEach((trainData, id) => {
         const [lng, lat] = trainData.coordinates;
@@ -589,7 +588,6 @@
                 offset: L.point(4, 0)  // Desplaza el popup 20 píxeles hacia arriba
             });
             
-            markers.push(marker);  // Añadir el marcador al array
             markersLayer.addLayer(marker);
             count++;
         }
@@ -597,21 +595,13 @@
     
     document.getElementById("matchedCount").textContent = count;
 
-    // Ajustar el zoom solo si hay marcadores
-    if (markers.length > 0) {
-        // Crear un grupo de límites
-        const group = new L.featureGroup(markers);
-        const bounds = group.getBounds();
-        
-        // Asegurarse de que los límites son válidos
-        if (bounds.isValid()) {
-            map.fitBounds(bounds, {
-                padding: [50, 50],
-                maxZoom: 13,
-                animate: true,
-                duration: 0.5
-            });
-        }
+    // Ajustar el zoom para incluir todos los marcadores si hay alguno
+    if (count > 0) {
+        const bounds = markersLayer.getBounds();
+        map.fitBounds(bounds, {
+            padding: [50, 50], // Añade un padding de 50px alrededor de los marcadores
+            maxZoom: 13 // Limita el zoom máximo para no acercarse demasiado
+        });
     }
   }
 
@@ -724,3 +714,4 @@ function showItinerary(trainName) {
 </div>
 </body>
 </html>
+``` 
