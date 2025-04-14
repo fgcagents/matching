@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mapa de Trenes</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      padding: 0; 
+      margin: 0; 
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+    }
+    
+    .controls {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;  /* Reducido de 16px */
+      padding: 16px;        /* Reducido de 24px */
+      margin: 10px;         /* Reducido de 15px */
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;           /* Reducido de 15px */
+      max-width: 800px;    /* Reducido de 1200px */
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .controls__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;          /* Reducido de 15px */
+    }
+
+    .controls__title {
+      font-size: 20px;    /* Reducido de 24px */
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .controls__subtitle {
+      font-size: 16px;    /* Reducido de 18px */
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .controls__input-group {
+      display: flex;
+      gap: 8px;           /* Reducido de 15px */
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    #fileInput {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px;
+      border: 2px solid #e1e1e1;
+      border-radius: 10px;
+      background-color: white;
+    }
+
+    .controls__button {
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 12px;         /* Reducido significativamente */
+      font-size: 14px;          /* Reducido de 16px */
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: auto;          /* Eliminado el min-width fijo */
+      text-align: center;
+    }
+
+    .controls__button:hover {
+      background-color: #0077ed;
+      transform: translateY(-1px);
+    }
+
+    .controls__button:active {
+      background-color: #0068d1;
+      transform: translateY(1px);
+    }
+
+    .controls__file-button {
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+      border: 1px solid #e1e1e1;  /* Reducido de 2px */
+      border-radius: 20px;
+      padding: 6px 12px;          /* Reducido significativamente */
+      font-size: 14px;           /* Reducido de 16px */
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: auto;           /* Eliminado el min-width fijo */
+      text-align: center;
+      flex: 1;
+    }
+
+    .controls__file-button:hover {
+      background-color: #e1e1e1;
+      transform: translateY(-1px);
+    }
+
+    .controls__file-button.active {
+      background-color: #0071e3;
+      color: white;
+      border-color: #0071e3;
+    }
+
+    @media (max-width: 768px) {
+      .controls {
+        padding: 12px;          /* Reducido de 16px */
+        margin: 8px;           /* Reducido de 10px */
+        gap: 8px;             /* Reducido de 12px */
+      }
+
+      .controls__title {
+        font-size: 18px;      /* Reducido de 20px */
+      }
+
+      .controls__subtitle {
+        font-size: 14px;      /* Reducido de 16px */
+      }
+
+      .controls__input-group {
+        flex-direction: row;  /* Cambiado a row para mantener los botones en línea */
+        gap: 6px;            /* Reducido el espacio entre botones */
+      }
+
+      .controls__button,
+      .controls__file-button {
+        padding: 6px 10px;    /* Reducido el padding */
+        font-size: 13px;      /* Reducido el tamaño de fuente */
+        width: auto;          /* Eliminado el width 100% */
+      }
+
+      #map {
+        height: calc(100vh - 120px); /* Ajustado para el nuevo tamaño del control */
+      }
+    }
+    
+    /* Resto de estilos originales */
+    .train-marker {
+      text-align: center;
+      line-height: 24px;
+    }
+    .leaflet-tooltip {
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 2px 5px;
+    }
+    
+    .custom-popup {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.4;
+        padding: 5px;
+    }
+    
+    .custom-popup h3 {
+        margin: 0 0 10px 0;
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 5px;
+    }
+    
+    .custom-popup .info-row {
+        margin: 5px 0;
+        padding: 5px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+    
+    .custom-popup .label {
+        color: #7f8c8d;
+        font-weight: 600;
+        display: inline-block;
+        margin-right: 5px;
+    }
+    
+    .custom-popup .value {
+        color: #2c3e50;
+        font-weight: 500;
+    }
+  
+    .tooltip-verde {
+        background-color: rgba(144, 238, 144, 0.85); /* verd clar */
+        border: 1px solid #3c763d;
+        color: #2e4e2e;
+    }
+
+    .tooltip-vermell {
+        background-color: rgba(255, 182, 193, 0.85); /* vermell clar */
+        border: 1px solid #a94442;
+        color: #721c24;
+    }
+
+      
+    #itineraryModal {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+    }
+
+    #itineraryModal h2 {
+      margin-top: 0;
+      color: #1d1d1f;
+      border-bottom: 2px solid #0071e3;
+      padding-bottom: 10px;
+    }
+
+    #itineraryTable {
+        width: auto;
+        margin: 20px auto;
+        border-collapse: collapse;
+        border: none;
+    }
+
+    #itineraryTable th, #itineraryTable td {
+        padding: 7px 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+        white-space: nowrap;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+
+    #itineraryTable th {
+        font-size: 15px;
+        letter-spacing: 1px;
+        padding: 7px 10px;
+    }
+
+    #itineraryTable thead {
+        background-color: #0071e3;
+        color: white;
+        border: none;
+    }
+
+    #itineraryTable tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    #itineraryModal button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      width: auto;
+    }
+
+    #itineraryModal button:hover {
+      background-color: #c0392b;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="controls">
+  <div class="controls__header">
+    <h2 class="controls__title">Matching Geotren</h2>
+    <h3 class="controls__subtitle">Trenes detectats: <span id="matchedCount">0</span></h3>
+  </div>
+  <div class="controls__input-group">
+    <button class="controls__file-button" data-file="000_100.json">000/100</button>
+    <button class="controls__file-button" data-file="200_300.json">200/300</button>
+    <button class="controls__file-button" data-file="400_500.json">400/500</button>
+    <button class="controls__button" onclick="refresh()">Actualizar</button>
+  </div>
+</div>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  let itineraryList = [];
+  let idToTrainMap = new Map();
+  let map;
+  let markersLayer = L.layerGroup();
+
+  const trainIcon = L.divIcon({
+    html: `<div style="font-size: 24px;">🚆</div>`,
+    className: 'train-marker',
+    iconSize: [24, 24],
+    iconAnchor: [12, 12]
+  });
+
+  // Inicializar el mapa
+  function initMap() {
+    if (!map) {
+      map = L.map("map").setView([41.4, 2.1], 11);
+      
+      // Capa base de CARTO
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      // Capa de vías férreas de OpenRailwayMap 
+      L.tileLayer('https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openrailwaymap.org/">OpenRailwayMap</a> contributors',
+        maxZoom: 19,
+        opacity: 0.7
+      }).addTo(map);
+
+      markersLayer.addTo(map);
+    }
+  }
+
+  // Reemplaza la función fetchAllTrains para descargar el geojson desde la web
+  async function fetchAllTrains() {
+    try {
+        console.log('Iniciando fetchAllTrains...');
+        const response = await fetch('https://geotren.fgc.cat/tracker/trens.geojson');
+        
+        if (!response.ok) {
+            console.error('Error en la descarga del fitxer:', response.status);
+            return [];
+        }
+        
+        const data = await response.json();
+        const trains = data.features.map(feature => ({
+            ...feature.properties,
+            coordinates: feature.geometry.coordinates
+        }));
+        
+        console.log('Trenes descargados:', trains.length);
+        console.log('Muestra de datos:', trains[0]);
+        
+        return trains;
+    } catch (error) {
+        console.error('Error al descargar el fitxer:', error);
+        return [];
+    }
+  }
+
+  function parseHora(horaStr) {
+    const [h, m] = horaStr.split(":").map(Number);
+    return new Date(0, 0, 0, h, m);
+  }
+
+  function getHoraActual() {
+    const now = new Date();
+    return new Date(0, 0, 0, now.getHours(), now.getMinutes());
+  }
+
+  function parseProperesParades(properes) {
+    try {
+        // Si ya es un array (como en el JSON), simplemente mapeamos los valores
+        if (Array.isArray(properes)) {
+            return properes.map(p => p.parada);
+        }
+        // Por compatibilidad, mantenemos el parseo de string si viene en el formato antiguo
+        const parades = "[" + properes + "]";
+        return JSON.parse(parades.replace(/;/g, ",")).map(p => p.parada);
+    } catch (error) {
+        console.error('Error parseando paradas:', error);
+        return [];
+    }
+}
+  function getOrderedItinerary(train) {
+    const parades = [];
+    for (const [key, value] of Object.entries(train)) {
+      if (!["A/D", "Linia", "Tren"].includes(key) && value) {
+        parades.push({
+          estacio: key,
+          hora: value,
+          timestamp: parseHora(value).getTime()
+        });
+      }
+    }
+    return parades.sort((a, b) => a.timestamp - b.timestamp);
+  }
+
+  function verificarSecuenciaParadas(properes, itinerario, estacioActual) {
+    if (properes.length === 0 || itinerario.length === 0) return false;
+    
+    const indexActual = itinerario.findIndex(p => p.estacio === estacioActual);
+    if (indexActual === -1) return false;
+    
+    let coincidencias = 0;
+    let minCoincidenciasRequeridas = Math.min(2, properes.length);
+    
+    for (let i = 0; i < properes.length; i++) {
+      const indexItinerario = indexActual + i + 1;
+      if (indexItinerario >= itinerario.length) break;
+      
+      if (properes[i] === itinerario[indexItinerario].estacio) {
+        coincidencias++;
+        if (coincidencias >= minCoincidenciasRequeridas) return true;
+      } else {
+        break;
+      }
+    }
+    
+    return false;
+  }
+
+  function matchTrains(itineraryList, apiTrains, horaActual) {
+    const matches = [];
+    const matchedTrains = new Set();
+    const liniesRequerides = ["R5", "R6", "S3", "S4", "S8", "S9", "L8"];
+
+    for (const api of apiTrains) {
+        const apiId = api.id;
+        const liniaApi = api.lin.substring(0, 2);
+        const direccio = api.dir;
+        const properes = parseProperesParades(api.properes_parades);
+        const estacioActual = api.estacionat_a || (properes.length > 0 ? properes[0] : "");
+
+        if (!liniesRequerides.includes(liniaApi)) {
+            continue;
+        }
+
+        if (idToTrainMap.has(apiId)) {
+            const trainData = idToTrainMap.get(apiId);
+            trainData.proximaParada = properes.length > 0 ? properes[0] : null;
+            trainData.coordinates = api.coordinates;
+            const trenNom = trainData.tren;
+            const train = itineraryList.find(t => t.Tren === trenNom);
+            if (!train || matchedTrains.has(trenNom)) continue;
+
+            const itinerarioOrdenado = getOrderedItinerary(train);
+            
+            let coincideEnTiempoYSecuencia = false;
+            
+            for (const parada of itinerarioOrdenado) {
+                const { estacio, hora } = parada;
+                const horaEst = parseHora(hora);
+                const diffMin = Math.abs((horaEst - horaActual) / 60000);
+
+                if (diffMin <= 10 && (estacio === estacioActual || properes.includes(estacio))) {
+                    if (estacio === estacioActual || verificarSecuenciaParadas(properes, itinerarioOrdenado, estacio)) {
+                        coincideEnTiempoYSecuencia = true;
+                        matches.push({
+                            tren: trenNom,
+                            linia: liniaApi,
+                            direccio,
+                            estacio: estacioActual,
+                            hora: hora,
+                            matched: true
+                        });
+
+                        matchedTrains.add(trenNom);
+                        break;
+                    }
+                }
+            }
+            
+            if (!coincideEnTiempoYSecuencia) {
+                idToTrainMap.delete(apiId);
+            } else {
+                continue;
+            }
+        }
+
+        let mejorMatch = null;
+        let mejorPuntuacion = 0;
+        let horaMatch = "";
+
+        for (const train of itineraryList) {
+            const liniaItinerary = train.Linia.substring(0, 2);
+            if (liniaItinerary !== liniaApi || train["A/D"] !== direccio) continue;
+            if (matchedTrains.has(train.Tren)) continue;
+
+            const itinerarioOrdenado = getOrderedItinerary(train);
+            
+            for (let i = 0; i < itinerarioOrdenado.length; i++) {
+                const { estacio, hora } = itinerarioOrdenado[i];
+                const horaEst = parseHora(hora);
+                const diffMin = Math.abs((horaEst - horaActual) / 60000);
+
+                if (diffMin <= 10 && (estacio === estacioActual || properes.includes(estacio))) {
+                    let puntuacion = 10 - diffMin;
+                    
+                    if (estacio === estacioActual) {
+                        puntuacion += 5;
+                    }
+                    
+                    if (verificarSecuenciaParadas(properes, itinerarioOrdenado, estacio)) {
+                        puntuacion += 10;
+                    }
+                    
+                    if (puntuacion > mejorPuntuacion) {
+                        mejorMatch = {
+                            tren: train.Tren,
+                            linia: liniaItinerary,
+                            direccio,
+                            estacio: estacioActual,
+                            hora: hora,
+                            matched: true
+                        };
+                        mejorPuntuacion = puntuacion;
+                        horaMatch = hora;
+                    }
+                }
+            }
+        }
+
+        if (mejorMatch) {
+            matches.push(mejorMatch);
+            matchedTrains.add(mejorMatch.tren);
+            idToTrainMap.set(apiId, {
+                tren: mejorMatch.tren,
+                coordinates: api.coordinates,
+                proximaParada: properes.length > 0 ? properes[0] : null,
+            en_hora: api.en_hora  // Afegim en_hora
+            });
+        }
+    }
+
+    return matches;
+  }
+
+  function updateMapMarkers() {
+    markersLayer.clearLayers();
+    let count = 0;
+    
+    idToTrainMap.forEach((trainData, id) => {
+        const [lng, lat] = trainData.coordinates;
+        if (lat && lng) {
+            const trainInfo = itineraryList.find(t => t.Tren === trainData.tren);
+            const flecha = trainInfo && trainInfo['A/D'] === "A" ? "🔼" : "🔽";
+            
+            // Obtener la hora de paso si existe la próxima parada
+            let horaPaso = '';
+            if (trainData.proximaParada && trainInfo) {
+                horaPaso = trainInfo[trainData.proximaParada] || '';
+            }
+            
+            const proximaParada = trainData.proximaParada ? 
+                `<div class="info-row">
+                    <span class="label">Propera parada:</span> 
+                    <span class="value">${trainData.proximaParada}</span>
+                    ${horaPaso ? `<br><span class="label">Hora:</span> 
+                    <span class="value">${horaPaso}</span>` : ''}
+                </div>` : '';
+            
+            const marker = L.marker([lat, lng], {
+                icon: trainIcon
+            }).bindTooltip(`${flecha} ${trainData.tren}`, {
+                permanent: true,
+                direction: 'top',
+                offset: [4, -15],
+                className: trainData.en_hora === true ? 'leaflet-tooltip tooltip-verde' : 'leaflet-tooltip tooltip-vermell'
+              }).bindPopup(`
+                <div class="custom-popup">
+                    <h3>🚆 <a href="#" onclick="showItinerary('${trainData.tren}'); return false;">Tren ${trainData.tren}</a></h3>
+                    <div class="info-row">
+                        <span class="label">Línea:</span>
+                        <span class="value">${trainInfo ? trainInfo.Linia : 'N/A'}</span>
+                    </div>
+                    ${proximaParada}
+                </div>
+            `, {
+                offset: L.point(4, 0)  // Desplaza el popup 20 píxeles hacia arriba
+            });
+            
+            markersLayer.addLayer(marker);
+            count++;
+        }
+    });
+    
+    document.getElementById("matchedCount").textContent = count;
+  }
+
+  async function refresh() {
+    if (itineraryList.length === 0) {
+        console.log("No hay itinerarios cargados");
+        alert("Primero carga un archivo JSON con itinerarios");
+        return;
+    }
+
+    try {
+        const horaActual = getHoraActual();
+        const apiTrains = await fetchAllTrains();
+        console.log("Trenes obtenidos de la API:", apiTrains.length);
+        console.log("Estado actual de idToTrainMap:", idToTrainMap.size);
+
+        // Limpiar trenes no activos
+        const idsActuals = new Set(apiTrains.map(api => api.id));
+        console.log("IDs de trenes activos:", Array.from(idsActuals));
+
+        Array.from(idToTrainMap.keys()).forEach(id => {
+            if (!idsActuals.has(id)) {
+                console.log(`Eliminando tren inactivo con ID: ${id}`);
+                idToTrainMap.delete(id);
+            }
+        });
+
+        const matches = matchTrains(itineraryList, apiTrains, horaActual);
+        console.log("Matches encontrados:", matches.length);
+        console.log("Estado final de idToTrainMap:", idToTrainMap.size);
+        console.log("Contenido de idToTrainMap:", Array.from(idToTrainMap.entries()));
+
+        updateMapMarkers();
+    } catch (error) {
+        console.error('Error en refresh:', error);
+    }
+  }
+
+  document.querySelectorAll('.controls__file-button').forEach(button => {
+  button.addEventListener('click', async function() {
+    const fileName = this.dataset.file;
+    
+    try {
+      // Desactivar todos los botones
+      document.querySelectorAll('.controls__file-button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Activar el botón seleccionado
+      this.classList.add('active');
+      
+      const response = await fetch(fileName);
+      if (!response.ok) {
+        throw new Error(`Error al cargar el archivo: ${fileName}`);
+      }
+      
+      const data = await response.json();
+      itineraryList = data;
+      alert(`Itinerario ${fileName} cargado correctamente.`);
+      refresh();
+    } catch (error) {
+      alert(`Error al cargar el archivo ${fileName}: ${error.message}`);
+      this.classList.remove('active');
+    }
+  });
+});
+
+  
+function showItinerary(trainName) {
+  const tren = itineraryList.find(t => t.Tren === trainName);
+  if (!tren) return;
+
+  document.getElementById("modalTrainName").textContent = trainName;
+
+  const tableBody = document.getElementById("itineraryTable").querySelector("tbody");
+  tableBody.innerHTML = "";
+
+  const horaris = [];
+  for (const [clau, hora] of Object.entries(tren)) {
+    if (!["Tren", "Linia", "A/D"].includes(clau) && hora) {
+      horaris.push({ estacio: clau, hora });
+    }
+  }
+
+  horaris.sort((a, b) => parseHora(a.hora) - parseHora(b.hora));
+
+  for (const { estacio, hora } of horaris) {
+    const row = `<tr><td>${estacio}</td><td>${hora}</td></tr>`;
+    tableBody.innerHTML += row;
+  }
+
+  document.getElementById("itineraryModal").style.display = "block";
+}
+
+  // Inicializar el mapa al cargar
+  initMap();
+  setInterval(refresh, 20000);
+</script>
+
+
+<div id="itineraryModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); min-width:300px; max-width:600px; max-height:80%; overflow:auto; background:white; padding:20px; z-index:10000; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+  <button onclick="document.getElementById('itineraryModal').style.display='none'" style="float:right;">Tancar</button>
+  <h2>Itinerari <span id="modalTrainName"></span></h2>
+  <table id="itineraryTable" style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr><th>Estació</th><th>Hora</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+</body>
+</html>
