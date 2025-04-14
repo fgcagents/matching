@@ -308,6 +308,7 @@
   let idToTrainMap = new Map();
   let map;
   let markersLayer = L.layerGroup();
+  let firstLoad = true;  // Nueva variable para controlar la primera carga
 
   const trainIcon = L.divIcon({
     html: `<div style="font-size: 24px;">🚆</div>`,
@@ -597,13 +598,11 @@
     
     document.getElementById("matchedCount").textContent = count;
 
-    // Ajustar el zoom solo si hay marcadores
-    if (markers.length > 0) {
-        // Crear un grupo de límites
+    // Ajustar el zoom solo en la primera carga si hay marcadores
+    if (markers.length > 0 && firstLoad) {
         const group = new L.featureGroup(markers);
         const bounds = group.getBounds();
         
-        // Asegurarse de que los límites son válidos
         if (bounds.isValid()) {
             map.fitBounds(bounds, {
                 padding: [50, 50],
@@ -612,6 +611,7 @@
                 duration: 0.5
             });
         }
+        firstLoad = false;  // Desactivar el ajuste automático después de la primera carga
     }
   }
 
@@ -724,3 +724,4 @@ function showItinerary(trainName) {
 </div>
 </body>
 </html>
+``` 
