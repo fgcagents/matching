@@ -32,8 +32,11 @@
       flex-direction: column;
       gap: 10px;
       max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
     }
 
     .controls__header {
@@ -55,6 +58,13 @@
       font-weight: 500;
       margin: 0;
     }
+
+    #matchedCount {
+      color: #0071e3;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
 
     .controls__input-group {
       display: flex;
