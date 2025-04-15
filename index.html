@@ -40,8 +40,11 @@
       top: 10px;
       left: 50%;
       transform: translateX(-50%);
+      width: calc(100% - 20%); /* Añade esto */
+      margin: 10px 0; /* Añade esto */
+      box-sizing: border-box; /* Añade esto */
       z-index: 1000;
-    }
+    }
 
     .controls__header {
       display: flex;
@@ -140,8 +143,8 @@
     @media (max-width: 768px) {
       .controls {
         padding: 12px;          /* Reducido de 16px */
-        margin: 8px;           /* Reducido de 10px */
-        gap: 8px;             /* Reducido de 12px */
+        margin: 8px 0;           /* Reducido de 10px */
+        width: calc(100% - 10%); /* Reducido de 100% - 20px */
       }
 
       .controls__title {
