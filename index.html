@@ -14,16 +14,20 @@
       color: #1d1d1f;
     }
     
-    #map {
+   /* #map {
       height: calc(100vh - 100px);
       width: 100%;
+    }*/
+
+    #map {
+      height: 100vh;
     }
+
     
     .controls {
       background-color: rgba(255, 255, 255, 0.95);
       border-radius: 12px;
       padding: 16px;
-      margin: 10px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
@@ -62,7 +66,7 @@
     #matchedCount {
       color: #0071e3;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 18px;
     }
 
 
@@ -278,6 +282,11 @@
       background-color: #c0392b;
     }
 
+    .leaflet-bottom.leaflet-left {
+      bottom: 10px;
+      left: 10px;
+    }
+
   </style>
 </head>
 <body>
@@ -315,7 +324,14 @@
   // Inicializar el mapa
   function initMap() {
     if (!map) {
-      map = L.map("map").setView([41.4, 2.1], 11);
+      map = L.map("map", {
+      zoomControl: false
+    }).setView([41.4, 2.1], 11);
+
+    L.control.zoom({
+      position: 'bottomleft'
+    }).addTo(map);
+
       
       // Capa base de CARTO
       L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
