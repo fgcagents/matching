@@ -282,10 +282,23 @@
       background-color: #c0392b;
     }
 
-    .leaflet-bottom.leaflet-left {
+   /* .leaflet-bottom.leaflet-left {
       bottom: 10px;
       left: 10px;
-    }
+    }*/
+
+    @media (max-width: 768px) {
+      .controls__input-group {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+      }
+
+      .controls__input-group::-webkit-scrollbar {
+        display: none;
+      }
+}
+
 
   </style>
 </head>
@@ -327,10 +340,6 @@
       map = L.map("map", {
       zoomControl: false
     }).setView([41.4, 2.1], 11);
-
-    L.control.zoom({
-      position: 'bottomleft'
-    }).addTo(map);
 
       
       // Capa base de CARTO
