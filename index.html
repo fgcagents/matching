@@ -44,7 +44,8 @@
       margin: 10px 0; /* Añade esto */
       box-sizing: border-box; /* Añade esto */
       z-index: 1000;
-    }
+    }
+
 
     .controls__header {
       display: flex;
@@ -285,10 +286,10 @@
       background-color: #c0392b;
     }
 
-   /* .leaflet-bottom.leaflet-left {
+   .leaflet-bottom.leaflet-left {
       bottom: 10px;
       left: 10px;
-    }*/
+    }
 
     @media (max-width: 768px) {
       .controls__input-group {
@@ -414,19 +415,38 @@
         return [];
     }
 }
-  function getOrderedItinerary(train) {
-    const parades = [];
-    for (const [key, value] of Object.entries(train)) {
-      if (!["A/D", "Linia", "Tren"].includes(key) && value) {
-        parades.push({
-          estacio: key,
-          hora: value,
-          timestamp: parseHora(value).getTime()
-        });
-      }
+function getOrderedItinerary(train) {
+  const parades = [];
+  
+  // Primera pasada para recoger todas las paradas
+  for (const [key, value] of Object.entries(train)) {
+    if (!["A/D", "Linia", "Tren"].includes(key) && value) {
+      parades.push({
+        estacio: key,
+        hora: value,
+        timestamp: parseHora(value).getTime()
+      });
     }
-    return parades.sort((a, b) => a.timestamp - b.timestamp);
   }
+  
+  // Ordenamos primero por timestamp sin ajustar
+  parades.sort((a, b) => a.timestamp - b.timestamp);
+  
+  // Detectar si hay un salto hacia atrás en las horas (pasando la medianoche)
+  for (let i = 1; i < parades.length; i++) {
+    // Si la hora actual es muy anterior a la hora previa (ej. 00:15 vs 23:45)
+    if (parades[i].timestamp < parades[i-1].timestamp - 21600000) { // 6 horas en ms
+      // Añadimos un día a esta y todas las paradas siguientes
+      for (let j = i; j < parades.length; j++) {
+        parades[j].timestamp += 86400000; // 24 horas en ms
+      }
+      break; // Solo necesitamos corregir una vez
+    }
+  }
+  
+  // Ordenamos de nuevo con los timestamps ajustados
+  return parades.sort((a, b) => a.timestamp - b.timestamp);
+}
 
   function verificarSecuenciaParadas(properes, itinerario, estacioActual) {
     if (properes.length === 0 || itinerario.length === 0) return false;
