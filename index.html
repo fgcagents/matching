@@ -729,17 +729,11 @@ function showItinerary(trainName) {
   const tableBody = document.getElementById("itineraryTable").querySelector("tbody");
   tableBody.innerHTML = "";
 
-  const horaris = [];
-  for (const [clau, hora] of Object.entries(tren)) {
-    if (!["Tren", "Linia", "A/D"].includes(clau) && hora) {
-      horaris.push({ estacio: clau, hora });
-    }
-  }
+  // Usamos getOrderedItinerary para ordenar correctamente el itinerario, incluso después de medianoche
+  const horaris = getOrderedItinerary(tren);
 
-  horaris.sort((a, b) => parseHora(a.hora) - parseHora(b.hora));
-
-  for (const { estacio, hora } of horaris) {
-    const row = `<tr><td>${estacio}</td><td>${hora}</td></tr>`;
+  for (const parada of horaris) {
+    const row = `<tr><td>${parada.estacio}</td><td>${parada.hora}</td></tr>`;
     tableBody.innerHTML += row;
   }
 
