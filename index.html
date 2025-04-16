@@ -729,10 +729,11 @@ function showItinerary(trainName) {
   const tableBody = document.getElementById("itineraryTable").querySelector("tbody");
   tableBody.innerHTML = "";
 
-  // Usamos getOrderedItinerary para ordenar correctamente el itinerario, incluso después de medianoche
-  const horaris = getOrderedItinerary(tren);
+  // Usamos getOrderedItinerary para ordenar correctamente el itinerario
+  const itinerarioOrdenado = getOrderedItinerary(tren);
 
-  for (const parada of horaris) {
+  // Recorremos el itinerario ordenado y añadimos cada parada a la tabla
+  for (const parada of itinerarioOrdenado) {
     const row = `<tr><td>${parada.estacio}</td><td>${parada.hora}</td></tr>`;
     tableBody.innerHTML += row;
   }
