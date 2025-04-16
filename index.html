@@ -20,9 +20,15 @@
     }*/
 
     #map {
-      height: 100vh;
+      height: calc(100vh - 30px); /* Deja 30px para la atribución */
+      margin-bottom: 30px; /* Espacio reservado */
     }
 
+    /* Asegurar que la atribución de Leaflet sea visible */
+    .leaflet-control-attribution {
+      z-index: 1000 !important; /* Prioridad sobre otros elementos */
+      font-size: 10px !important; /* Ajustar tamaño si es necesario */
+    }
     
     .controls {
       background-color: rgba(255, 255, 255, 0.95);
