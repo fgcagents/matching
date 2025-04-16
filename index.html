@@ -645,6 +645,13 @@ function getOrderedItinerary(train) {
     document.getElementById("matchedCount").textContent = count;
   }
 
+    function resetData() {
+      itineraryList = [];
+      idToTrainMap.clear();
+      markersLayer.clearLayers();
+      document.getElementById("matchedCount").textContent = "0";
+  }
+
   async function refresh() {
     if (itineraryList.length === 0) {
         console.log("No hay itinerarios cargados");
@@ -692,6 +699,9 @@ function getOrderedItinerary(train) {
       
       // Activar el botón seleccionado
       this.classList.add('active');
+      
+      // Reiniciar los datos antes de cargar el nuevo archivo
+      resetData();
       
       const response = await fetch(fileName);
       if (!response.ok) {
