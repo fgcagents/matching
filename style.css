@@ -1,0 +1,301 @@
+body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      height: 100%;
+      padding: 0; 
+      margin: 0; 
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+    }
+    
+   /* #map {
+      height: calc(100vh - 100px);
+      width: 100%;
+    }*/
+
+    #map {
+      height: 100vh;
+    }
+
+    
+    .controls {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 800px;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 20%); /* Añade esto */
+      margin: 10px 0; /* Añade esto */
+      box-sizing: border-box; /* Añade esto */
+      z-index: 1000;
+    }
+
+
+    .controls__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;          /* Reducido de 15px */
+    }
+
+    .controls__title {
+      font-size: 20px;    /* Reducido de 24px */
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .controls__subtitle {
+      font-size: 16px;    /* Reducido de 18px */
+      font-weight: 500;
+      margin: 0;
+    }
+
+    #matchedCount {
+      color: #0071e3;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+
+    .controls__input-group {
+      display: flex;
+      gap: 8px;           /* Reducido de 15px */
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    #fileInput {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px;
+      border: 2px solid #e1e1e1;
+      border-radius: 10px;
+      background-color: white;
+    }
+
+    .controls__button {
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 12px;         /* Reducido significativamente */
+      font-size: 14px;          /* Reducido de 16px */
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: auto;          /* Eliminado el min-width fijo */
+      text-align: center;
+    }
+
+    .controls__button:hover {
+      background-color: #0077ed;
+      transform: translateY(-1px);
+    }
+
+    .controls__button:active {
+      background-color: #0068d1;
+      transform: translateY(1px);
+    }
+
+    .controls__file-button {
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+      border: 1px solid #e1e1e1;  /* Reducido de 2px */
+      border-radius: 20px;
+      padding: 6px 12px;          /* Reducido significativamente */
+      font-size: 14px;           /* Reducido de 16px */
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: auto;           /* Eliminado el min-width fijo */
+      text-align: center;
+      flex: 1;
+    }
+
+    .controls__file-button:hover {
+      background-color: #e1e1e1;
+      transform: translateY(-1px);
+    }
+
+    .controls__file-button.active {
+      background-color: #0071e3;
+      color: white;
+      border-color: #0071e3;
+    }
+
+    @media (max-width: 768px) {
+      .controls {
+        padding: 12px;          /* Reducido de 16px */
+        margin: 8px 0;           /* Reducido de 10px */
+        width: calc(100% - 10%); /* Reducido de 100% - 20px */
+      }
+
+      .controls__title {
+        font-size: 18px;      /* Reducido de 20px */
+      }
+
+      .controls__subtitle {
+        font-size: 14px;      /* Reducido de 16px */
+      }
+
+      .controls__input-group {
+        flex-direction: row;  /* Cambiado a row para mantener los botones en línea */
+        gap: 6px;            /* Reducido el espacio entre botones */
+      }
+
+      .controls__button,
+      .controls__file-button {
+        padding: 6px 10px;    /* Reducido el padding */
+        font-size: 13px;      /* Reducido el tamaño de fuente */
+        width: auto;          /* Eliminado el width 100% */
+      }
+
+      #map {
+        height: calc(100vh - 80px); /* Cambia 80px si tu barra tiene otro alto */
+      }
+    }
+    
+    /* Resto de estilos originales */
+    .train-marker {
+      text-align: center;
+      line-height: 24px;
+    }
+    .leaflet-tooltip {
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 2px 5px;
+    }
+    
+    .custom-popup {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.4;
+        padding: 5px;
+    }
+    
+    .custom-popup h3 {
+        margin: 0 0 10px 0;
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 5px;
+    }
+    
+    .custom-popup .info-row {
+        margin: 5px 0;
+        padding: 5px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+    
+    .custom-popup .label {
+        color: #7f8c8d;
+        font-weight: 600;
+        display: inline-block;
+        margin-right: 5px;
+    }
+    
+    .custom-popup .value {
+        color: #2c3e50;
+        font-weight: 500;
+    }
+  
+    .tooltip-verde {
+        background-color: rgba(144, 238, 144, 0.85); /* verd clar */
+        border: 1px solid #3c763d;
+        color: #2e4e2e;
+    }
+
+    .tooltip-vermell {
+        background-color: rgba(255, 182, 193, 0.85); /* vermell clar */
+        border: 1px solid #a94442;
+        color: #721c24;
+    }
+
+      
+    #itineraryModal {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+    }
+
+    #itineraryModal h2 {
+      margin-top: 0;
+      color: #1d1d1f;
+      border-bottom: 2px solid #0071e3;
+      padding-bottom: 10px;
+    }
+
+    #itineraryTable {
+        width: auto;
+        margin: 20px auto;
+        border-collapse: collapse;
+        border: none;
+    }
+
+    #itineraryTable th, #itineraryTable td {
+        padding: 7px 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+        white-space: nowrap;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+
+    #itineraryTable th {
+        font-size: 15px;
+        letter-spacing: 1px;
+        padding: 7px 10px;
+    }
+
+    #itineraryTable thead {
+        background-color: #0071e3;
+        color: white;
+        border: none;
+    }
+
+    #itineraryTable tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    #itineraryModal button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      width: auto;
+    }
+
+    #itineraryModal button:hover {
+      background-color: #c0392b;
+    }
+
+   .leaflet-bottom.leaflet-left {
+      bottom: 10px;
+      left: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .controls__input-group {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+      }
+
+      .controls__input-group::-webkit-scrollbar {
+        display: none;
+      }
+}

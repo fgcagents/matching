@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>GeoMatching trens</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="controls">
+    <div class="controls__header">
+      <h2 class="controls__title">Matching Geotren</h2>
+      <h3 class="controls__subtitle">Trens detectats: <span id="matchedCount">0</span></h3>
+    </div>
+    <div class="controls__input-group">
+      <button class="controls__file-button" data-file="000_100.json">000/100</button>
+      <button class="controls__file-button" data-file="200_300.json">200/300</button>
+      <button class="controls__file-button" data-file="400_500.json">400/500</button>
+      <button class="controls__button" style="background:#063970;" onclick="window.open('https://fgcagents.github.io/itinerari-LA/', '_blank')">Itineraris ▶</button>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <div id="itineraryModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); min-width:300px; max-width:600px; max-height:80%; overflow:auto; background:white; padding:20px; z-index:10000; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <button onclick="document.getElementById('itineraryModal').style.display='none'" style="float:right;">Tancar</button>
+    <h2>Itinerari <span id="modalTrainName"></span></h2>
+    <table id="itineraryTable" style="width:100%; border-collapse: collapse;">
+      <thead>
+        <tr><th>Estació</th><th>Hora</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
