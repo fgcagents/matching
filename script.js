@@ -284,13 +284,6 @@ function getOrderedItinerary(train) {
                     <span class="value">${horaPaso}</span>` : ''}
                 </div>` : '';
             
-            // Añadir el campo "tipus_unitat" al popup
-            const tipusUnitat = trainData.tipus_unitat ? 
-                `<div class="info-row">
-                    <span class="label">Tipus Unitat:</span> 
-                    <span class="value">${trainData.tipus_unitat}</span>
-                </div>` : '';
-            
             const marker = L.marker([lat, lng], {
                 icon: trainIcon
             }).bindTooltip(`${flecha} ${trainData.tren}`, {
@@ -306,7 +299,6 @@ function getOrderedItinerary(train) {
                         <span class="value">${trainInfo ? trainInfo.Linia : 'N/A'}</span>
                     </div>
                     ${proximaParada}
-                    ${tipusUnitat}
                 </div>
             `, {
                 offset: L.point(4, 0)  // Desplaza el popup 20 píxeles hacia arriba
