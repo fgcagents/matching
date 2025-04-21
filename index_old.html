@@ -420,37 +420,43 @@
         return [];
     }
 }
-function getOrderedItinerary(train) {
-  const parades = [];
-  
-  // Primera pasada para recoger todas las paradas
-  for (const [key, value] of Object.entries(train)) {
-    if (!["A/D", "Linia", "Tren"].includes(key) && value) {
-      parades.push({
-        estacio: key,
-        hora: value,
-        timestamp: parseHora(value).getTime()
-      });
+
+// Funciones de conversión de tiempo
+const timeToMinutes = timeStr => {
+    if (!timeStr) return null;
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return hours * 60 + minutes;
+};
+
+// Función para ordenar resultados basados en la hora
+const sortResultsByTime = results => {
+    return results.sort((a, b) => {
+        const timeA = timeToMinutes(a.hora);
+        const timeB = timeToMinutes(b.hora);
+        if (timeA === null) return 1;
+        if (timeB === null) return -1;
+        const adjustedTimeA = timeA < 240 ? timeA + 1440 : timeA;
+        const adjustedTimeB = timeB < 240 ? timeB + 1440 : timeB;
+        return adjustedTimeA - adjustedTimeB;
+    });
+};
+
+// Sustitución de la función getOrderedtinerary
+function getOrderedtinerary(train) {
+    const parades = [];
+
+    // Primera pasada para recoger todas las paradas
+    for (const [key, value] of Object.entries(train)) {
+        if (!["A/D", "Linia", "Tren"].includes(key) && value) {
+            parades.push({
+                estacio: key,
+                hora: value
+            });
+        }
     }
-  }
-  
-  // Ordenamos primero por timestamp sin ajustar
-  parades.sort((a, b) => a.timestamp - b.timestamp);
-  
-  // Detectar si hay un salto hacia atrás en las horas (pasando la medianoche)
-  for (let i = 1; i < parades.length; i++) {
-    // Si la hora actual es muy anterior a la hora previa (ej. 00:15 vs 23:45)
-    if (parades[i].timestamp < parades[i-1].timestamp - 21600000) { // 6 horas en ms
-      // Añadimos un día a esta y todas las paradas siguientes
-      for (let j = i; j < parades.length; j++) {
-        parades[j].timestamp += 86400000; // 24 horas en ms
-      }
-      break; // Solo necesitamos corregir una vez
-    }
-  }
-  
-  // Ordenamos de nuevo con los timestamps ajustados
-  return parades.sort((a, b) => a.timestamp - b.timestamp);
+
+    // Ordenar las paradas usando sortResultsByTime
+    return sortResultsByTime(parades);
 }
 
   function verificarSecuenciaParadas(properes, itinerario, estacioActual) {
