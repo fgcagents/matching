@@ -503,6 +503,7 @@ function getOrderedtinerary(train) {
             const trainData = idToTrainMap.get(apiId);
             trainData.proximaParada = properes.length > 0 ? properes[0] : null;
             trainData.coordinates = api.coordinates;
+            trainData.tipus_unitat = api.tipus_unitat || 'Desconegut'; // Añadido aquí
             const trenNom = trainData.tren;
             const train = itineraryList.find(t => t.Tren === trenNom);
             if (!train || matchedTrains.has(trenNom)) continue;
@@ -591,13 +592,14 @@ function getOrderedtinerary(train) {
                 tren: mejorMatch.tren,
                 coordinates: api.coordinates,
                 proximaParada: properes.length > 0 ? properes[0] : null,
-            en_hora: api.en_hora  // Afegim en_hora
+                tipus_unitat: api.tipus_unitat || 'Desconegut', // Añadido aquí
+                en_hora: api.en_hora  // Afegim en_hora
             });
         }
     }
 
     return matches;
-  }
+}
 
   function updateMapMarkers() {
     markersLayer.clearLayers();
@@ -623,6 +625,9 @@ function getOrderedtinerary(train) {
                     <span class="value">${horaPaso}</span>` : ''}
                 </div>` : '';
             
+            // Añadir el campo tipus_unitat al popup
+            const tipusUnitat = trainData.tipus_unitat || 'Desconegut';
+
             const marker = L.marker([lat, lng], {
                 icon: trainIcon
             }).bindTooltip(`${flecha} ${trainData.tren}`, {
@@ -638,6 +643,10 @@ function getOrderedtinerary(train) {
                         <span class="value">${trainInfo ? trainInfo.Linia : 'N/A'}</span>
                     </div>
                     ${proximaParada}
+                    <div class="info-row">
+                        <span class="label">Tipus Unitat:</span>
+                        <span class="value">${tipusUnitat}</span>
+                    </div>
                 </div>
             `, {
                 offset: L.point(4, 0)  // Desplaza el popup 20 píxeles hacia arriba
@@ -649,7 +658,7 @@ function getOrderedtinerary(train) {
     });
     
     document.getElementById("matchedCount").textContent = count;
-  }
+}
 
     function resetData() {
       itineraryList = [];
@@ -765,3 +774,4 @@ function showItinerary(trainName) {
 </div>
 </body>
 </html>
+``` 
