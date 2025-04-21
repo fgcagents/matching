@@ -164,6 +164,7 @@ function getOrderedItinerary(train) {
             const trainData = idToTrainMap.get(apiId);
             trainData.proximaParada = properes.length > 0 ? properes[0] : null;
             trainData.coordinates = api.coordinates;
+            trainData.tipus_unitat = api.tipus_unitat || 'Desconegut'; // Añadido aquí
             const trenNom = trainData.tren;
             const train = itineraryList.find(t => t.Tren === trenNom);
             if (!train || matchedTrains.has(trenNom)) continue;
@@ -283,7 +284,10 @@ function getOrderedItinerary(train) {
                     ${horaPaso ? `<br><span class="label">Hora:</span> 
                     <span class="value">${horaPaso}</span>` : ''}
                 </div>` : '';
-            
+
+            // Añadir el campo tipus_unitat al popup
+            const tipusUnitat = trainData.tipus_unitat || 'Desconegut';
+    
             const marker = L.marker([lat, lng], {
                 icon: trainIcon
             }).bindTooltip(`${flecha} ${trainData.tren}`, {
@@ -299,6 +303,10 @@ function getOrderedItinerary(train) {
                         <span class="value">${trainInfo ? trainInfo.Linia : 'N/A'}</span>
                     </div>
                     ${proximaParada}
+                    <div class="info-row">
+                        <span class="label">Tipus Unitat:</span>
+                        <span class="value">${tipusUnitat}</span>
+                    </div>
                 </div>
             `, {
                 offset: L.point(4, 0)  // Desplaza el popup 20 píxeles hacia arriba
