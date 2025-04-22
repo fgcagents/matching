@@ -296,8 +296,6 @@ function getOrderedItinerary(train) {
               if (!isNaN(diffMin)) {
                 if (diffMin > 0) {
                   retardHTML = `<br><span class="label">Retard:</span> <span class="value" style="color:red;">+${diffMin} min</span>`;
-                } else if (diffMin < 0) {
-                  retardHTML = `<br><span class="label">Avançat:</span> <span class="value" style="color:green;">${diffMin} min</span>`;
                 } else {
                   retardHTML = `<br><span class="label">A temps</span>`;
                 }
