@@ -18,7 +18,7 @@ body {
 
     
     .controls {
-      background-color: rgba(255, 255, 255, 0.95);
+      background-color: rgba(255, 255, 255, 0.20);
       border-radius: 12px;
       padding: 16px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -28,17 +28,46 @@ body {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-width: 800px;
       position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 20%); /* Añade esto */
-      margin: 10px 0; /* Añade esto */
-      box-sizing: border-box; /* Añade esto */
       z-index: 1000;
+      box-sizing: border-box;
     }
 
+    /* Estilos por defecto (pantallas verticales) */
+    @media (orientation: portrait) {
+        .controls {
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 20%);
+            max-width: 800px;
+        }
+    }
+
+    /* Estilos para pantallas horizontales */
+    @media (orientation: landscape) {
+        .controls {
+            top: 10px;
+            left: 10px;
+            width: 150px;
+            border-radius: 12px;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .controls__input-group {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .controls__input-group button {
+            width: 100%;
+            margin: 4px 0;
+        }
+    }
 
     .controls__header {
       display: flex;
