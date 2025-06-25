@@ -314,10 +314,10 @@ function getOrderedItinerary(train) {
             const marker = L.marker([lat, lng], {
                 icon: trainIcon
             }).bindTooltip(
-                `${flecha} ${trainData.tren}` +
+                `${flecha} ${trainData.tren} ` +
                 (
                   retardHTML.includes('+') && parseInt(retardHTML.match(/\+(\d+)/)?.[1]) >= 2
-                    ? `<br><span style="color:red;font-weight:bold;">(+${parseInt(retardHTML.match(/\+(\d+)/)?.[1])} min)</span>`
+                    ? `<span style="color:red;font-weight:bold;">(+${parseInt(retardHTML.match(/\+(\d+)/)?.[1])} min)</span>`
                     : ''
                 ),
                 {
