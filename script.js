@@ -317,7 +317,7 @@ function getOrderedItinerary(train) {
                 `${flecha} ${trainData.tren}` +
                 (
                   retardHTML.includes('+') && parseInt(retardHTML.match(/\+(\d+)/)?.[1]) >= 2
-                    ? `<br><span style="color:red;font-weight:bold;">Retard: +${parseInt(retardHTML.match(/\+(\d+)/)?.[1])} min</span>`
+                    ? `<br><span style="color:red;font-weight:bold;">(+${parseInt(retardHTML.match(/\+(\d+)/)?.[1])} min)</span>`
                     : ''
                 ),
                 {
