@@ -313,15 +313,22 @@ function getOrderedItinerary(train) {
     
             const marker = L.marker([lat, lng], {
                 icon: trainIcon
-            }).bindTooltip(`${flecha} ${trainData.tren}`, {
-                permanent: true,
-                direction: 'top',
-                offset: [4, -15],
-                /*className: trainData.en_hora === true ? 'leaflet-tooltip tooltip-verde' : 'leaflet-tooltip tooltip-vermell'*/
-                className: (trainData.en_hora === true || (retardHTML.includes('+') && parseInt(retardHTML.match(/\+(\d+)/)?.[1]) <= 2)) 
-                    ? 'leaflet-tooltip tooltip-verde' 
-                    : 'leaflet-tooltip tooltip-vermell'
-              }).bindPopup(`
+            }).bindTooltip(
+                `${flecha} ${trainData.tren}` +
+                (
+                  retardHTML.includes('+') && parseInt(retardHTML.match(/\+(\d+)/)?.[1]) >= 2
+                    ? `<br><span style="color:red;font-weight:bold;">Retard: +${parseInt(retardHTML.match(/\+(\d+)/)?.[1])} min</span>`
+                    : ''
+                ),
+                {
+                    permanent: true,
+                    direction: 'top',
+                    offset: [4, -15],
+                    className: (trainData.en_hora === true || (retardHTML.includes('+') && parseInt(retardHTML.match(/\+(\d+)/)?.[1]) < 2)) 
+                        ? 'leaflet-tooltip tooltip-verde' 
+                        : 'leaflet-tooltip tooltip-vermell'
+                }
+            ).bindPopup(`
                 <div class="custom-popup">
                     <h3>🚆 <a href="#" onclick="showItinerary('${trainData.tren}'); return false;">Tren ${trainData.tren}</a></h3>
                     <div class="info-row">
