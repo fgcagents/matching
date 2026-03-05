@@ -324,9 +324,9 @@ function getOrderedItinerary(train) {
                     permanent: true,
                     direction: 'top',
                     offset: [4, -15],
-                    className: (trainData.en_hora === true || (retardHTML.includes('+') && parseInt(retardHTML.match(/\+(\d+)/)?.[1]) < 2)) 
+                  //  className: (trainData.en_hora === true || (retardHTML.includes('+') && parseInt(retardHTML.match(/\+(\d+)/)?.[1]) < 2)) 
                         ? 'leaflet-tooltip tooltip-verde' 
-                        : 'leaflet-tooltip tooltip-vermell'
+                        : 'leaflet-tooltip tooltip-vermell'//
                 }
             ).bindPopup(`
                 <div class="custom-popup">
@@ -451,4 +451,5 @@ function showItinerary(trainName) {
 
   // Inicializar el mapa al cargar
   initMap();
+
   setInterval(refresh, 10000);
