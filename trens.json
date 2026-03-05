@@ -1,0 +1,14 @@
+{
+  "N429": {
+    "color": "tooltip-groc",
+    "reference": "Groc"
+  },
+  "P426": {
+    "color": "tooltip-blau",
+    "reference": "Blau"
+  },
+  "O316": {
+    "color": "tooltip-verd",
+    "reference": "Verd"
+  }
+}

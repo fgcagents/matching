@@ -18,16 +18,48 @@
       <button class="controls__file-button" data-file="000_100.json">000/100</button>
       <button class="controls__file-button" data-file="200_300.json">200/300</button>
       <button class="controls__file-button" data-file="400_500.json">400/500</button>
-      <button class="controls__button" style="background:#063970;" onclick="window.open('https://fgcagents.github.io/proves/', '_blank')">Itineraris ▶</button>
+      <button class="controls__button" onclick="window.open('https://fgcagents.github.io/proves/', '_blank')">Itineraris ▶</button>
+    </div>
+    </div>
+  </div>
+
+  <div class="color-selector">
+    <button class="color-selector-toggle" id="colorSelectorToggle">+</button>
+    <div class="color-selector-content" id="colorSelectorContent">
+      <div class="color-mode-selector">
+        <label for="trainColorSelector">Mode de colors:</label>
+        <select id="trainColorSelector">
+          <option value="default">Per defecte (segons retard)</option>
+          <option value="custom">Colors personalitzats</option>
+        </select>
+      </div>
+        <div id="customColorControls">        <input type="text" id="trainNameInput" placeholder="Nom del tren (ex: 4001)">
+        <input type="text" id="colorRefInput" placeholder="Referència (ex: Línia R5)">
+        <label for="colorSelect">Color del tren:</label>
+        <select id="colorSelect">
+          <option value="tooltip-vermell">Vermell</option>
+          <option value="tooltip-verd">Verd</option>
+          <option value="tooltip-blau">Blau</option>
+          <option value="tooltip-groc">Groc</option>
+          <option value="tooltip-lila">Lila</option>
+        </select>
+        <div class="color-actions">
+          <button class="assign" onclick="assignTrainColor()">Assignar</button>
+          <button class="clear" onclick="clearTrainColors()">Esborrar tots</button>
+        </div>
+        <div class="color-actions">
+          <button class="assign" onclick="exportTrainColors()">Exportar colors</button>
+          <button class="assign" onclick="importTrainColors()">Importar colors</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <div id="map"></div>
-
-  <div id="itineraryModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); min-width:300px; max-width:600px; max-height:80%; overflow:auto; background:white; padding:20px; z-index:10000; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-    <button onclick="document.getElementById('itineraryModal').style.display='none'" style="float:right;">Tancar</button>
+  <div id="itineraryModal">
+    <button onclick="document.getElementById('itineraryModal').style.display='none'">Tancar</button>
     <h2>Itinerari <span id="modalTrainName"></span></h2>
-    <table id="itineraryTable" style="width:100%; border-collapse: collapse;">
+    <table id="itineraryTable">
       <thead>
         <tr><th>Estació</th><th>Hora</th></tr>
       </thead>

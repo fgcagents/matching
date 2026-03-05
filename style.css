@@ -22,8 +22,8 @@ body {
       border-radius: 12px;
       padding: 16px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
       transition: all 0.3s ease;
       display: flex;
       flex-direction: column;
@@ -240,13 +240,13 @@ body {
     }
   
     .tooltip-verde {
-        background-color: rgba(255, 255, 255, 0.8); /* verd clar */
+        background-color: rgba(144, 238, 144, 0.85); /* verd clar */
         border: 1px solid #3c763d;
         color: #2e4e2e;
     }
 
     .tooltip-vermell {
-        background-color: rgba(255, 255, 255, 0.8); /* vermell clar */
+        background-color: rgba(255, 182, 193, 0.85); /* vermell clar */
         border: 1px solid #a94442;
         color: #721c24;
     }
@@ -256,6 +256,19 @@ body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       border-radius: 12px;
+      display: none;
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 300px;
+      max-width: 600px;
+      max-height: 80%;
+      overflow: auto;
+      background: white;
+      padding: 20px;
+      z-index: 10000;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     #itineraryModal h2 {
@@ -266,10 +279,8 @@ body {
     }
 
     #itineraryTable {
-        width: auto;
-        margin: 20px auto;
+        width: 100%;
         border-collapse: collapse;
-        border: none;
     }
 
     #itineraryTable th, #itineraryTable td {
@@ -306,6 +317,7 @@ body {
       cursor: pointer;
       letter-spacing: 1px;
       width: auto;
+      float: right;
     }
 
     #itineraryModal button:hover {
@@ -327,5 +339,213 @@ body {
       .controls__input-group::-webkit-scrollbar {
         display: none;
       }
-
 }
+
+/* Colors per als tooltips */
+.tooltip-vermell {
+    background-color: #ff4444 !important;
+    color: white !important;
+    border: 1px solid #cc0000 !important;
+}
+
+.tooltip-verd {
+    background-color: #44ff44 !important;
+    color: black !important;
+    border: 1px solid #00cc00 !important;
+}
+
+.tooltip-blau {
+    background-color: #4444ff !important;
+    color: white !important;
+    border: 1px solid #0000cc !important;
+}
+
+.tooltip-groc {
+    background-color: #ffff44 !important;
+    color: black !important;
+    border: 1px solid #cccc00 !important;
+}
+
+.tooltip-taronja {
+    background-color: #ff8844 !important;
+    color: white !important;
+    border: 1px solid #cc4400 !important;
+}
+
+.tooltip-rosa {
+    background-color: #ff44ff !important;
+    color: white !important;
+    border: 1px solid #cc00cc !important;
+}
+
+.tooltip-cian {
+    background-color: #44ffff !important;
+    color: black !important;
+    border: 1px solid #00cccc !important;
+}
+
+/* Estil per al desplegable */
+.color-selector {
+    margin: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+}
+
+/* Estilos para el selector de colores */
+.color-selector {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.color-selector-toggle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: transform 0.3s ease;
+}
+
+.color-selector-toggle:hover {
+    transform: scale(1.1);
+}
+
+.color-selector-content {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 250px;
+    display: none;
+}
+
+
+
+.color-selector-content.active {
+    display: block;
+}
+
+.color-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.color-option:hover {
+    background-color: #f5f5f7;
+}
+
+.color-ball {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+}
+
+.color-label {
+    flex-grow: 1;
+    font-size: 14px;
+}
+
+#trainNameInput {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+#colorSelect {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.color-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.color-actions button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.color-actions button.assign {
+    background-color: #0071e3;
+    color: white;
+}
+
+.color-actions button.clear {
+    background-color: #ff3b30;
+    color: white;
+}
+
+.color-actions button:hover {
+    opacity: 0.9;
+}
+
+/* Estilos del botón de itinerarios */
+    .controls__button[onclick*="proves"] {
+        background: #063970;
+    }
+
+    /* Controles de color personalizados */
+    #customColorControls {
+        display: none;
+    }
+
+    /* Modal de itinerario */
+    #itineraryModal {
+        display: none;
+        position: fixed;
+        top: 10%;
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 300px;
+        max-width: 600px;
+        max-height: 80%;
+        overflow: auto;
+        background: white;
+        padding: 20px;
+        z-index: 10000;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    #itineraryModal button {
+        float: right;
+    }
+
+    #itineraryTable {
+        width: 100%;
+        border-collapse: collapse;
+    }
